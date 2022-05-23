@@ -13,7 +13,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import com.sarthak.demo.models.CatalogItem;
 import com.sarthak.demo.models.Movie;
-import com.sarthak.demo.models.Rating;
+import com.sarthak.demo.models.UserRatingList;
 
 @RestController
 @RequestMapping("/catalog")
@@ -26,14 +26,17 @@ public class MovieCatalogResource {
 
 	@RequestMapping("{userId}")
 	public List<CatalogItem> getCatalogItems(@PathVariable String userId) {
-		List<Rating> ratingsList = Arrays.asList(new Rating("1234", 5), new Rating("5678", 4));
+		UserRatingList ratingsList = restTemplate
+				.getForObject("http://localhost:8083/ratings/users/" + userId.toString(), 
+				UserRatingList.class);
 
-		return ratingsList.stream().map(rating -> {
-			
+		return ratingsList.getRatings().stream().map(rating -> {
+
 			// Movie movie = restTemplate.getForObject("http://localhost:8082/movies/" +
 			// rating.getMovieId(), Movie.class);
 
-			// ? WebCleint is reactive way to handle api, RestTemplate, the above line is the old way
+			// ? WebCleint is reactive way to handle api, RestTemplate, the above line is
+			// the old way
 			Movie movie = this.webClientaBuilder.build()
 					.get()
 					.uri("http://localhost:8082/movies/" + rating.getMovieId())

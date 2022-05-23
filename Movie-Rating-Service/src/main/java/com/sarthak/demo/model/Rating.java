@@ -1,4 +1,5 @@
-package com.sarthak.demo.models;
+package com.sarthak.demo.model;
+
 public class Rating {
 
     private String movieId;
@@ -7,7 +8,6 @@ public class Rating {
     public Rating() {
         
     }
-
     public Rating(String movieId, int rating) {
         this.movieId = movieId;
         this.rating = rating;
