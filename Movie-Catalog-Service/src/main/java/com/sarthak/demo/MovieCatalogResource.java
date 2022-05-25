@@ -26,26 +26,23 @@ public class MovieCatalogResource {
 	@RequestMapping("{userId}")
 	public List<CatalogItem> getCatalogItems(@PathVariable String userId) {
 		UserRatingList ratingsList = restTemplate
-				.getForObject("http://localhost:8083/ratings/users/" + userId.toString(), 
+				.getForObject("http://movie-rating-service/ratings/users/" + userId.toString(), 
 				UserRatingList.class);
 
 		return ratingsList.getRatings().stream().map(rating -> {
-
-			// Movie movie = restTemplate.getForObject("http://localhost:8082/movies/" +
-			// rating.getMovieId(), Movie.class);
-
-			// ? WebCleint is reactive way to handle api, RestTemplate, the above line is
-			// the old way
-			Movie movie = this.webClientaBuilder.build()
-					.get()
-					.uri("http://localhost:8082/movies/" + rating.getMovieId())
-					.retrieve()
-					.bodyToMono(Movie.class)
-					.block();
+			// ? WebCleint is reactive way to handle api, RestTemplate,  the old way is restTemplate, see lines belo for web client
+			Movie movie = restTemplate.getForObject("http://movie-info-service/movies/" + rating.getMovieId(), Movie.class);
 			return new CatalogItem(movie.getName(), movie.getDesc(), rating.getRating());
 		}).collect(Collectors.toList());
-		// return this.catalogs;
-
+		
 	}
-
 }
+// ? webClient way
+// Movie movie = this.webClientaBuilder.build()
+// .get()
+// .uri("http://movie-info-service/movies/" + rating.getMovieId())
+// .retrieve()
+// .bodyToMono(Movie.class)
+// .block();
+// return new CatalogItem(movie.getName(), movie.getDesc(), rating.getRating());
+// }).collect(Collectors.toList());
