@@ -1,5 +1,6 @@
 package com.sarthak.demo;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 
 import com.sarthak.demo.models.CatalogItem;
 import com.sarthak.demo.models.Movie;
@@ -24,6 +26,7 @@ public class MovieCatalogResource {
 	public WebClient.Builder webClientaBuilder;
 
 	@RequestMapping("{userId}")
+	@HystrixCommand(fallbackMethod = "getFallBackForCataLog")
 	public List<CatalogItem> getCatalogItems(@PathVariable String userId) {
 		UserRatingList ratingsList = restTemplate
 				.getForObject("http://movie-rating-service/ratings/users/" + userId.toString(), 
@@ -35,6 +38,10 @@ public class MovieCatalogResource {
 			return new CatalogItem(movie.getName(), movie.getDesc(), rating.getRating());
 		}).collect(Collectors.toList());
 		
+	}
+
+	public List<CatalogItem> getFallBackForCataLog(@PathVariable String userId) {
+		return Arrays.asList(new CatalogItem("No Movie", "desc", 0));
 	}
 }
 // ? webClient way
