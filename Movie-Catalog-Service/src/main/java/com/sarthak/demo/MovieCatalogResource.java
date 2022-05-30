@@ -3,6 +3,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -30,6 +32,17 @@ public class MovieCatalogResource {
 	@Autowired
 	public MovieInfoService movieInfoService;
 
+	@Value("${welcome_message}")
+	private String customMessage;
+	// you may also pass the default value in case , spring doesnt find welcome_message during compile time
+	// @Value("${welcome_message} : write default value here")
+
+
+	@GetMapping("/message")
+	public String getMessage() {
+		return this.customMessage;
+	}
+	
 	@RequestMapping("{userId}")
 	public List<CatalogItem> getCatalogItems(@PathVariable String userId) {
 		UserRatingList ratingsList = movieRatingService.getRatingList(userId);
