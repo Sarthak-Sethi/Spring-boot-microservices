@@ -12,6 +12,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import com.sarthak.demo.models.CatalogItem;
+import com.sarthak.demo.models.DbSetting;
 import com.sarthak.demo.models.Movie;
 import com.sarthak.demo.models.UserRatingList;
 import com.sarthak.demo.services.MovieInfoService;
@@ -32,6 +33,9 @@ public class MovieCatalogResource {
 	@Autowired
 	public MovieInfoService movieInfoService;
 
+	@Autowired
+	DbSetting dbSetting;
+
 	@Value("${welcome_message}")
 	private String customMessage;
 	// you may also pass the default value in case , spring doesnt find welcome_message during compile time
@@ -41,6 +45,11 @@ public class MovieCatalogResource {
 	@GetMapping("/message")
 	public String getMessage() {
 		return this.customMessage;
+	}
+
+	@GetMapping("/configurationproperties")
+	public String getConfigurationProperties() {
+		return dbSetting.getHost()+dbSetting.getConnectionUrl()+dbSetting.getPort();
 	}
 	
 	@RequestMapping("{userId}")
