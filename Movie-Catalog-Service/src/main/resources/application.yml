@@ -1,6 +1,9 @@
 server.port : 8081
 spring.application.name: movie-catalog-service
-welcome_message : welcome to sarthak microservices
+spring:
+  config:
+    import: 'optional:configserver:http://localhost:8888'
+welcome_message: welcome to sarthak microservices
 db:
   connectionUrl: http://url_here 
   host: sarthak
