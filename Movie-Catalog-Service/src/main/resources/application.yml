@@ -5,6 +5,13 @@ spring:
     import: 'optional:configserver:http://localhost:8888'
 welcome_message: welcome to sarthak microservices
 db:
-  connectionUrl: http://url_here 
+  connectionUrl: http://url_here
   host: sarthak
   port: 8080
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
